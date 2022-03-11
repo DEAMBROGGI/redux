@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux';
 import dataActions from '../redux/actions/dataActions'
 
+
 const Home = (props) => {
 
     useEffect(() => {
@@ -20,7 +21,7 @@ const Home = (props) => {
             <div className='listContainer' >
 
                 {props.apiData && props.filterApiData?.map(data =>
-                    <div key={data.id} className="listData">{data.name} ,...{data.status}</div>
+                    <div key={data.id} className="listData">{data.name} ,...{data.status} 💰</div>
                 )}
 
             </div>
