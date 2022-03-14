@@ -7,7 +7,7 @@ import {Link as LinkRouter } from 'react-router-dom';
 console.log(props)
     const handleSubmit = (event) => {
         event.preventDefault()
-
+console.log(event.target)
         const userData={
             fullName:event.target[0].value,
             email:event.target[1].value,
@@ -17,8 +17,7 @@ console.log(props)
         props.signUpUser(userData)
         
     }
-    console.log(props.message)
-    alert(props.message.message)
+   
     return (
 
         <form onSubmit={handleSubmit}>

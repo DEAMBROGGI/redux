@@ -31,8 +31,8 @@ function Container(props) {
 
 					<BrowserRouter>
 						<Routes>
-							<Route path="/" element={<SignIn />} />
-							<Route path="/signup" element={<SignUp />} />
+							{!props.user &&<Route path="/" element={<SignIn />} />}
+							{!props.user &&<Route path="/signup" element={<SignUp />} />}
 						</Routes>
 					</BrowserRouter>
 

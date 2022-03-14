@@ -6,6 +6,7 @@ const usersControllers = {
     signUpUsers:async (req,res)=>{
 
         let {fullName, email, password, from } = req.body.userData
+        console.log(password)
 
         try {
     
@@ -13,8 +14,11 @@ const usersControllers = {
             
             if (usuarioExiste) {
                 console.log(usuarioExiste.from.indexOf(from))
-                if (usuarioExiste.from.indexOf(from) === 0) { //INDEXOF = 0 EL VALOR EXISTE EN EL INDICE EQ A TRUE -1 NO EXITE EQ A FALSE
-                    res.json({ success: false, from:"signup", message: "Ya has realizado tu SignUp de esta forma por favor realiza SignIn" })
+                if (usuarioExiste.from.indexOf(from) === 0) {
+                    console.log("resultado de if " +(usuarioExiste.from.indexOf(from) === 0 )) //INDEXOF = 0 EL VALOR EXISTE EN EL INDICE EQ A TRUE -1 NO EXITE EQ A FALSE
+                    res.json({ success: false,
+                               from:"signup", 
+                               message: "Ya has realizado tu SignUp de esta forma por favor realiza SignIn" })
                 } else {
                     const contraseñaHasheada = bcryptjs.hashSync(password, 10)
                     usuarioExiste.from.push(from)
@@ -25,7 +29,7 @@ const usersControllers = {
     
                     res.json({
                         success: true, 
-                        from:"signup", //RESPONDE CON EL TOKEN Y EL NUEVO USUARIO
+                        from:"signup", 
                         message: "Te enviamos un email para validarlo, por favor verifica tu casilla para completar el signUp y agregarlo a tus metodos de SignIN "
                     }) 
                     
@@ -35,12 +39,13 @@ const usersControllers = {
                     res.json({ success: true,
                                from:"signup", 
                                message: "Agregamos "+from+ " a tus medios para realizar signIn" })
-                }// EN ESTE PUNTO SI EXITE RESPONDE FALSE
+                }
             }
             } else {
                 //SI EL USUARIO NO ESXITE
                
                 const contraseñaHasheada = bcryptjs.hashSync(password, 10) //LO CREA Y ENCRIPTA LA CONTRASEÑA
+                console.log(contraseñaHasheada)
                 // CREA UN NUEVO OBJETO DE PERSONAS CON SU USUARIO Y CONTRASEÑA (YA ENCRIPTADA)
                 const nuevoUsuario = await new User({
                     fullName,
@@ -84,14 +89,14 @@ const usersControllers = {
             const usuarioExiste = await User.findOne({ email })
 
             if (!usuarioExiste) {// PRIMERO VERIFICA QUE EL USUARIO EXISTA
-                res.json({ success: false, message: "Tu usuarios no a sido registrado realiza signIn" })
+                res.json({ success: false, message: "Tu usuarios no ha sido registrado realiza signUp" })
 
             } else {
                 if (from !== "form-Signin") { 
                     
                     let contraseñaCoincide =  usuarioExiste.password.filter(pass =>bcryptjs.compareSync(password, pass))
                     
-                    if (contraseñaCoincide.length >0) { //TERERO VERIFICA CONTRASEÑA
+                    if (contraseñaCoincide.length >0) { 
 
                         const userData = {
                                         fullName: usuarioExiste.fullName,
@@ -114,8 +119,12 @@ const usersControllers = {
                     }
                 } else { 
                     if(usuarioExiste.emailVerificado){
+                        
                         let contraseñaCoincide =  usuarioExiste.password.filter(pass =>bcryptjs.compareSync(password, pass))
+                        console.log(contraseñaCoincide)
+                        console.log("resultado de busqueda de contrasela: " +(contraseñaCoincide.length >0))
                         if(contraseñaCoincide.length >0){
+                            
                         const userData = {
                             fullName: usuarioExiste.fullName, 
                             email: usuarioExiste.email,
