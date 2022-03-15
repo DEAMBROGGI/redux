@@ -3,9 +3,10 @@ import axios from 'axios';
 const userActions = {
 
     signUpUser: (userData) => {
+     
         return async (dispatch, getState) => {
 
-            const res = await axios.post('http://localhost:4000/api/auth/signUp', { userData })
+            const res = await axios.post('http://localhost:4000/api/auth/signUp', { userData})
             console.log(res)
             dispatch({type: 'message', 
                        payload: {view: true,
@@ -17,8 +18,10 @@ const userActions = {
     signInUser: (logedUser) => {
 
         return async (dispatch, getState) => {
+            
             const user = await axios.post('http://localhost:4000/api/auth/signIn', { logedUser })
             if(user.data.success){
+                localStorage.setItem('token',user.data.response.token)
             dispatch({type: 'user', payload: user.data.response.userData});
             
             }
@@ -31,6 +34,7 @@ const userActions = {
     SignOutUser :(closeuser)=>{
         return async (dispatch, getState) => {
         const user = axios.post('http://localhost:4000/api/auth/signOut',{closeuser})
+        localStorage.removeItem('token')
         dispatch({type: 'user', payload: null});
     } 
 }

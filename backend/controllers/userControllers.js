@@ -2,6 +2,7 @@ const User = require('../models/usersModel')
 const bcryptjs = require('bcryptjs')
 const crypto = require('crypto')        //NPM CRYPTO
 const nodemailer = require('nodemailer') //NPM NODEMAILER
+const jwt = require('jsonwebtoken')
 
 
 
@@ -23,7 +24,12 @@ const sendEmail = async (email, uniqueString) => { //FUNCION ENCARGADA DE ENVIAR
         from: sender,    //DE QUIEN
         to: email,       //A QUIEN
         subject: "Verificacion de email usuario ", //EL ASUNTO Y EN HTML EL TEMPLATE PARA EL CUERPO DE EMAIL Y EL LINK DE VERIFICACION
-        html: `<h1 style="color:blue">Presiona <a href=http://localhost:4000/api/verify/${uniqueString}>aqui</a> para confirma tu email. Gracias </h1>`
+        html: `
+        <div >
+        <h1 style="color:red">Presiona <a href=http://localhost:4000/api/verify/${uniqueString}>aqui</a> para confirma tu email. Gracias </h1>
+        </div>
+        `
+    
     };
     await transporter.sendMail(mailOptions, function (error, response) { //SE REALIZA EL ENVIO
         if (error) { console.log(error) }
@@ -56,9 +62,9 @@ const usersControllers = {
 
 
     signUpUsers:async (req,res)=>{
-
+        console.log(req.body)
         let {fullName, email, password, from } = req.body.userData
-        console.log(password)
+      const test = req.body.test
 
         try {
     
@@ -154,17 +160,21 @@ const usersControllers = {
                     let contraseñaCoincide =  usuarioExiste.password.filter(pass =>bcryptjs.compareSync(password, pass))
                     
                     if (contraseñaCoincide.length >0) { 
-
+                       
                         const userData = {
+                                        id:usuarioExiste._id,
                                         fullName: usuarioExiste.fullName,
                                         email: usuarioExiste.email,
                                         from:usuarioExiste.from
                                         }
                         await usuarioExiste.save()
 
-                        res.json({ success: true, 
+                        const token = jwt.sign({...userData}, process.env.SECRET_KEY,{expiresIn:  60* 60*24 })
+                        
+
+                        res.json({ success: true,  
                                    from:from,
-                                   response: {userData }, 
+                                   response: {token,userData }, 
                                    message:"Bienvenido nuevamente "+userData.fullName,
                                  })
 
@@ -183,14 +193,15 @@ const usersControllers = {
                         if(contraseñaCoincide.length >0){
                             
                         const userData = {
+                            id: usuarioExiste._id,
                             fullName: usuarioExiste.fullName, 
                             email: usuarioExiste.email,
                             from:usuarioExiste.from
                             }
-                        
+                            const token = jwt.sign({...userData}, process.env.SECRET_KEY, {expiresIn:  60* 60*24 })
                         res.json({ success: true, 
                             from: from, 
-                            response: {userData }, 
+                            response: {token, userData }, 
                             message:"Bienvenido nuevamente "+userData.fullName,
                           })
                         }else{
