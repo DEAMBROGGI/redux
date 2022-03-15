@@ -3,8 +3,8 @@ const joi = require('joi')
 const validator = (req, res, next) => {
     const schema = joi.object({
         fullName: joi.string().max(20).min(3).trim().pattern(new RegExp('[a-zA-Z]')).required().messages({
-            'string.min':'El NOMBRE debe contener mas de 3 caracteres',
-            'string.max':"El nombre debe contener como maximo 20 caracteres"
+            'string.min':'fullName / El NOMBRE debe contener mas de 3 caracteres',
+            'string.max':"fullName / El nombre debe contener como maximo 20 caracteres"
         }),
 
         email: joi.string().email({ minDomainSegments: 2 }).required().messages({
@@ -22,7 +22,8 @@ const validator = (req, res, next) => {
        
     if (validation.error) {
         
-        return res.json({success: false, from:"validator", message:validation.error.details})
+        return res.json({success: false, from:"validator", message:validation.error.details, test: validation})
+        
     }
     
     next()

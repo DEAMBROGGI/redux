@@ -1,7 +1,59 @@
 const User = require('../models/usersModel')
 const bcryptjs = require('bcryptjs')
+const crypto = require('crypto')        //NPM CRYPTO
+const nodemailer = require('nodemailer') //NPM NODEMAILER
+
+
+
+const sendEmail = async (email, uniqueString) => { //FUNCION ENCARGADA DE ENVIAR EL EMAIL
+
+    const transporter = nodemailer.createTransport({ //DEFINIMOS EL TRASPORTE UTILIZANDO NODEMAILER
+        host: 'smtp.gmail.com',         //DEFINIMOS LO PARAMETROS NECESARIOS
+        port: 465,
+        secure: true,
+        auth: {
+            user: "useremailverifyMindHub@gmail.com",    //DEFINIMOS LOS DATOS DE AUTORIZACION DE NUESTRO PROVEEDOR DE
+            pass: "mindhub2021"                          //COREO ELECTRONICO, CONFIGURAR CUAENTAS PARA PERMIR EL USO DE APPS
+        }                                               //CONFIGURACIONES DE GMAIL
+    })
+
+    // EN ESTA SECCION LOS PARAMETROS DEL MAIL 
+    let sender = "useremailverifyMindHub@gmail.com"  
+    let mailOptions = { 
+        from: sender,    //DE QUIEN
+        to: email,       //A QUIEN
+        subject: "Verificacion de email usuario ", //EL ASUNTO Y EN HTML EL TEMPLATE PARA EL CUERPO DE EMAIL Y EL LINK DE VERIFICACION
+        html: `<h1 style="color:blue">Presiona <a href=http://localhost:4000/api/verify/${uniqueString}>aqui</a> para confirma tu email. Gracias </h1>`
+    };
+    await transporter.sendMail(mailOptions, function (error, response) { //SE REALIZA EL ENVIO
+        if (error) { console.log(error) }
+        else {
+            console.log("Mensaje enviado")
+
+        }
+    })
+};
+
+
+
 
 const usersControllers = {
+
+    verifyEmail: async (req, res) => {
+
+        const { uniqueString } = req.params; //EXTRAE EL EL STRING UNICO DEL LINK
+
+        const user = await User.findOne({ uniqueString: uniqueString })
+        console.log(user) //BUSCA AL USUARIO CORRESPONDIENTE AL LINK
+        if (user) {
+            user.emailVerificado = true //COLOCA EL CAMPO emailVerified en true
+            await user.save()
+            res.redirect("http://localhost:3000/") //REDIRECCIONA AL USUARIO A UNA RUTA DEFINIDA
+            //return  res.json({success:true, response:"Su email se ha verificado correctamente"})
+        }
+        else { res.json({ success: false, response: "Su email no se ha verificado" }) }
+    },
+
 
     signUpUsers:async (req,res)=>{
 
@@ -21,12 +73,14 @@ const usersControllers = {
                                message: "Ya has realizado tu SignUp de esta forma por favor realiza SignIn" })
                 } else {
                     const contraseñaHasheada = bcryptjs.hashSync(password, 10)
+                     
                     usuarioExiste.from.push(from)
                     usuarioExiste.password.push(contraseñaHasheada) 
                     if(from === "form-Signup"){ 
                         //PORSTERIORMENTE AGREGAREMOS LA VERIFICACION DE EMAIL
+                        usuarioExiste.uniqueString = crypto.randomBytes(15).toString('hex')
                         await usuarioExiste.save()
-    
+                        await sendEmail(email, usuarioExiste.uniqueString) //LLAMA A LA FUNCION ENCARGADA DEL ENVIO DEL CORREO ELECTRONICO
                     res.json({
                         success: true, 
                         from:"signup", 
@@ -34,6 +88,7 @@ const usersControllers = {
                     }) 
                     
                     }else{
+                    
                     usuarioExiste.save()
                     
                     res.json({ success: true,
@@ -51,7 +106,8 @@ const usersControllers = {
                     fullName,
                     email,
                     password:[contraseñaHasheada],
-                    emailVerificado:true,
+                    uniqueString:crypto.randomBytes(15).toString('hex'),
+                    emailVerificado:false,
                     from:[from],
                 
                 })
@@ -69,13 +125,14 @@ const usersControllers = {
                     //PASAR EMAIL VERIFICADO A FALSE
                     //ENVIARLE EL E MAIL PARA VERIFICAR
                     await nuevoUsuario.save()
+                    await sendEmail(email, nuevoUsuario.uniqueString) //LLAMA A LA FUNCION ENCARGADA DEL ENVIO DEL CORREO ELECTRONICO
     
                     res.json({
                         success: true, 
                         from:"siggup",
                         message: "Te enviamos un email para validarlo, por favor verifica tu casilla para completar el signUp "
                     }) // AGREGAMOS MENSAJE DE VERIFICACION
-                }
+                } 
             }
         } catch (error) {
             console.log(error)

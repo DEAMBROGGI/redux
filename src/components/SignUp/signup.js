@@ -1,23 +1,25 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux';
 import userActions from '../../redux/actions/userActions';
-import {Link as LinkRouter } from 'react-router-dom';
+import { Link as LinkRouter } from 'react-router-dom';
 
- function SignUp(props) {
-console.log(props)
+function SignUp(props) {
+const mascotas =["perro", "gato", "loro", "rana"]
+
+    console.log(props)
     const handleSubmit = (event) => {
         event.preventDefault()
-console.log(event.target)
-        const userData={
-            fullName:event.target[0].value,
-            email:event.target[1].value,
-            password:event.target[2].value,
-            from:"form-Signup"
+        console.log(event.target[3].value)
+        const userData = {
+            fullName: event.target[0].value,
+            email: event.target[1].value,
+            password: event.target[2].value,
+            from: "form-Signup"
         }
         props.signUpUser(userData)
-        
+
     }
-   
+
     return (
 
         <form onSubmit={handleSubmit}>
@@ -40,6 +42,16 @@ console.log(event.target)
                 </div>
                 <input name='password' className="form-control" placeholder="Create password" type="password" />
             </div>
+            <div className="form-group input-group">
+                <div className="input-group-prepend">
+                    <span className="input-group-text"> <i className="fa fa-lock"></i> </span>
+                </div>
+                <select id="gender" class="form-select">
+                    {mascotas.map(mascota=>
+                    <option>{mascota}</option>
+                    )}
+                </select>
+            </div>
 
             <div className="form-group">
                 <button type="submit" className="btn btn-primary btn-block"> Create Account  </button>
@@ -52,12 +64,12 @@ console.log(event.target)
 
 const mapDispatchToProps = {
     signUpUser: userActions.signUpUser,
-    
+
 }
 const mapStateToProps = (state) => {
-	return {
-		message: state.userReducer.message,
-	}
+    return {
+        message: state.userReducer.message,
+    }
 }
 
 

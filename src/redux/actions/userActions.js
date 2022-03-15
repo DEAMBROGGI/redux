@@ -6,6 +6,7 @@ const userActions = {
         return async (dispatch, getState) => {
 
             const res = await axios.post('http://localhost:4000/api/auth/signUp', { userData })
+            console.log(res)
             dispatch({type: 'message', 
                        payload: {view: true,
                                  message: res.data.message,
