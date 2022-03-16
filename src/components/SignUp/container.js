@@ -14,20 +14,15 @@ function Container(props) {
 
 	return (
 		<>
-			{props.user ? <><h1>Usuario conectado {props.user.fullName} desde {props.user.from[0]}</h1>
+			{props.user ? <><h1>Usuario conectado {props.user.fullName} desde {props.user.from}</h1>
 				<div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
 					<button onClick={SignOut} className="btn btn-primary btn-block" style={{ maxWidth: 400 }}> SignOut  </button>
 				</div>
 			</>
 				: <h1>No hay usuario conectado</h1>}
 			<div className="card bg-light">
-				<article className="card-body mx-auto" style={{ maxWidth: 400 }}>
-					<h4 className="card-title mt-3 text-center">User Account</h4>
-					<p className="text-center">Get started with your free account</p>
-
-					<p className="divider-text">
-						<span className="bg-light">OR</span>
-					</p>
+				
+					
 
 					<BrowserRouter>
 						<Routes>
@@ -37,7 +32,7 @@ function Container(props) {
 					</BrowserRouter>
 
 
-				</article>
+				
 			</div>
 
 		</>

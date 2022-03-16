@@ -13,7 +13,7 @@ const validator = (req, res, next) => {
         password: joi.string().pattern(new RegExp('[a-zA-Z0-9]')).required().trim().min(8).max(30).messages({
             'string.min':'El password debe contener minimo 8 caracteres y contener mayuscula, minuscula y numero',
             'string.pattern':"El password debe ser alphanumerico y contener un numero"
-        }),
+        }), 
         
         from:joi.string()
     })

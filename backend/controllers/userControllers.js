@@ -72,7 +72,7 @@ const usersControllers = {
             
             if (usuarioExiste) {
                 console.log(usuarioExiste.from.indexOf(from))
-                if (usuarioExiste.from.indexOf(from) === 0) {
+                if (usuarioExiste.from.indexOf(from) !== -1) {
                     console.log("resultado de if " +(usuarioExiste.from.indexOf(from) === 0 )) //INDEXOF = 0 EL VALOR EXISTE EN EL INDICE EQ A TRUE -1 NO EXITE EQ A FALSE
                     res.json({ success: false,
                                from:"signup", 
@@ -106,7 +106,7 @@ const usersControllers = {
                 //SI EL USUARIO NO ESXITE
                
                 const contraseñaHasheada = bcryptjs.hashSync(password, 10) //LO CREA Y ENCRIPTA LA CONTRASEÑA
-                console.log(contraseñaHasheada)
+            
                 // CREA UN NUEVO OBJETO DE PERSONAS CON SU USUARIO Y CONTRASEÑA (YA ENCRIPTADA)
                 const nuevoUsuario = await new User({
                     fullName,
@@ -150,12 +150,17 @@ const usersControllers = {
         const { email, password,  from } = req.body.logedUser
         try {
             const usuarioExiste = await User.findOne({ email })
+            //METODO PARA BUSCAR PASSWORD MEDIANTE FROM
+            console.log(usuarioExiste.from)
+            console.log(from)
+            const indexpass = usuarioExiste.from.indexOf(from)
+            console.log(usuarioExiste.password[indexpass])
 
             if (!usuarioExiste) {// PRIMERO VERIFICA QUE EL USUARIO EXISTA
                 res.json({ success: false, message: "Tu usuarios no ha sido registrado realiza signUp" })
 
             } else {
-                if (from !== "form-Signin") { 
+                if (from !== "form-Signup") { 
                     
                     let contraseñaCoincide =  usuarioExiste.password.filter(pass =>bcryptjs.compareSync(password, pass))
                     
@@ -165,7 +170,7 @@ const usersControllers = {
                                         id:usuarioExiste._id,
                                         fullName: usuarioExiste.fullName,
                                         email: usuarioExiste.email,
-                                        from:usuarioExiste.from
+                                        from:from
                                         }
                         await usuarioExiste.save()
 
@@ -196,7 +201,7 @@ const usersControllers = {
                             id: usuarioExiste._id,
                             fullName: usuarioExiste.fullName, 
                             email: usuarioExiste.email,
-                            from:usuarioExiste.from
+                            from:from
                             }
                             const token = jwt.sign({...userData}, process.env.SECRET_KEY, {expiresIn:  60* 60*24 })
                         res.json({ success: true, 
