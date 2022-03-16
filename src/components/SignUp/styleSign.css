@@ -36,3 +36,16 @@
 	margin-right: 0px !important;
 	width: 45px !important;
 }
+select {
+    width:100px; 
+    overflow:hidden; 
+    white-space:nowrap; 
+    text-overflow:ellipsis;
+}
+select option {
+    width:100px;
+    text-overflow:ellipsis;
+    overflow:hidden;
+}
+
+

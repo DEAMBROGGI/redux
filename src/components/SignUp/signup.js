@@ -1,12 +1,21 @@
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux';
 import userActions from '../../redux/actions/userActions';
 import { Link as LinkRouter } from 'react-router-dom';
 import GoogleSignUp from './GoogleSignUp'
 import FacebookSignUp from './FacebookSignUp';
+import Select from 'react-select'
+import SelectPaises from './select'
 
 function SignUp(props) {
-    const mascotas = ["perro", "gato", "loro", "rana"]
+    const paises = ["unselected", "Argentina", "Brazil", "Colombia", "Chile", "Uruguay"]
+
+    const [selectPaises, setSelectPaises] = useState("unselected")
+
+    function selected(event) {
+        console.log(event.target.value)
+        setSelectPaises(event.target.value)
+    }
 
     console.log(props)
     const handleSubmit = (event) => {
@@ -16,10 +25,10 @@ function SignUp(props) {
             fullName: event.target[0].value,
             email: event.target[1].value,
             password: event.target[2].value,
-            from: "form-Signup"
+            from: "form-Signup",
+            pais: selectPaises
         }
         props.signUpUser(userData)
-
     }
 
     return (
@@ -27,50 +36,61 @@ function SignUp(props) {
 
             <article className="card-body mx-auto" style={{ maxWidth: 400 }}>
 
-                <h4 className="card-title mt-3 text-center">User Account</h4>
-                <p className="text-center">Get started with your free account</p>
+                <div class="styled-select">
+                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" onChange={selected}>
 
-                <p className="divider-text">
-                    <span className="bg-light">OR</span>
-                </p>
-                <GoogleSignUp />
-                <FacebookSignUp />
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group input-group">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text"> <i className="fa fa-user"></i> </span>
-                        </div>
-                        <input name="fullName" className="form-control" placeholder="Full name" type="text" />
-                    </div>
-                    <div className="form-group input-group">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text"> <i className="fa fa-envelope"></i> </span>
-                        </div>
-                        <input name="email" className="form-control" placeholder="Email address" type="email" />
-                    </div>
+                        {paises.map(pais =>
 
-                    <div className="form-group input-group">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text"> <i className="fa fa-lock"></i> </span>
-                        </div>
-                        <input name='password' className="form-control" placeholder="Create password" type="password" />
-                    </div>
-                    <div className="form-group input-group">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text"> <i className="fa fa-lock"></i> </span>
-                        </div>
-                        <select id="gender" class="form-select">
-                            {mascotas.map(mascota =>
-                                <option>{mascota}</option>
-                            )}
-                        </select>
-                    </div>
+                            <option >{pais}</option>
 
-                    <div className="form-group">
-                        <button type="submit" className="btn btn-primary btn-block"> Create Account  </button>
-                    </div>
-                    <div className="text-center">Have an account? <LinkRouter to="/">SignIn</LinkRouter> </div>
-                </form>
+                        )}
+
+                    </select>
+
+                </div>
+                {selectPaises !== "unselected" ?
+                    <>
+                        <h4 className="card-title mt-3 text-center">User Account</h4>
+                        <p className="text-center">Get started with your free account</p>
+
+                        <p className="divider-text">
+                            <span className="bg-light">OR</span>
+                        </p>
+                        <GoogleSignUp pais={selectPaises} />
+                        <FacebookSignUp pais={selectPaises} />
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group input-group">
+                                <div className="input-group-prepend">
+                                    <span className="input-group-text"> <i className="fa fa-user"></i> </span>
+                                </div>
+                                <input name="fullName" className="form-control" placeholder="Full name" type="text" />
+                            </div>
+                            <div className="form-group input-group">
+                                <div className="input-group-prepend">
+                                    <span className="input-group-text"> <i className="fa fa-envelope"></i> </span>
+                                </div>
+                                <input name="email" className="form-control" placeholder="Email address" type="email" />
+                            </div>
+
+                            <div className="form-group input-group">
+                                <div className="input-group-prepend">
+                                    <span className="input-group-text"> <i className="fa fa-lock"></i> </span>
+                                </div>
+                                <input name='password' className="form-control" placeholder="Create password" type="password" />
+                            </div>
+                            <div className="form-group input-group">
+                                <div className="input-group-prepend">
+                                    <span className="input-group-text"> <i className="fa fa-lock"></i> </span>
+                                </div>
+
+                            </div>
+
+                            <div className="form-group">
+                                <button type="submit" className="btn btn-primary btn-block"> Create Account  </button>
+                            </div>
+                            <div className="text-center">Have an account? <LinkRouter to="/">SignIn</LinkRouter> </div>
+                        </form>
+                    </> : <h1>Selecciona tu pais para continuar signUp</h1>}
             </article>
         </>
     )

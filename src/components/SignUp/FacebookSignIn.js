@@ -7,11 +7,14 @@ import './styleSign.css'
 function FacebookSignIn(props) {
 
   const responseFacebook = async (res) => {
+      
+     
     console.log(res)
     const logedUser = {
       email: res.email,
       password: res.id,
-      from: "facebook"
+      from: "facebook",
+      
     }
     await props.signInUser(logedUser)
   }
@@ -21,7 +24,7 @@ function FacebookSignIn(props) {
     cssClass="buttonsocial my-facebook-button-class"
     icon="fa-facebook"
     textButton=" with Facebook"
-      appId="1618291221870710"
+      appId="880106799435159"
       autoLoad={false}
       fields="name,email,picture"
       callback={responseFacebook}

@@ -1,7 +1,7 @@
 const joi = require('joi')
 
 const validator = (req, res, next) => {
-    const schema = joi.object({
+    const schema = joi.object({ 
         fullName: joi.string().max(20).min(3).trim().pattern(new RegExp('[a-zA-Z]')).required().messages({
             'string.min':'fullName / El NOMBRE debe contener mas de 3 caracteres',
             'string.max':"fullName / El nombre debe contener como maximo 20 caracteres"
@@ -15,7 +15,8 @@ const validator = (req, res, next) => {
             'string.pattern':"El password debe ser alphanumerico y contener un numero"
         }), 
         
-        from:joi.string()
+        from:joi.string(),
+        pais:joi.string()
     })
 
     const validation = schema.validate(req.body.userData, {abortEarly:false})

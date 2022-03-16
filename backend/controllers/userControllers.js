@@ -63,7 +63,7 @@ const usersControllers = {
 
     signUpUsers:async (req,res)=>{
         console.log(req.body)
-        let {fullName, email, password, from } = req.body.userData
+        let {fullName, email, password, from, pais } = req.body.userData
       const test = req.body.test
 
         try {
@@ -73,7 +73,7 @@ const usersControllers = {
             if (usuarioExiste) {
                 console.log(usuarioExiste.from.indexOf(from))
                 if (usuarioExiste.from.indexOf(from) !== -1) {
-                    console.log("resultado de if " +(usuarioExiste.from.indexOf(from) === 0 )) //INDEXOF = 0 EL VALOR EXISTE EN EL INDICE EQ A TRUE -1 NO EXITE EQ A FALSE
+                    console.log("resultado de if " +(usuarioExiste.from.indexOf(from) !==0 )) //INDEXOF = 0 EL VALOR EXISTE EN EL INDICE EQ A TRUE -1 NO EXITE EQ A FALSE
                     res.json({ success: false,
                                from:"signup", 
                                message: "Ya has realizado tu SignUp de esta forma por favor realiza SignIn" })
@@ -115,6 +115,7 @@ const usersControllers = {
                     uniqueString:crypto.randomBytes(15).toString('hex'),
                     emailVerificado:false,
                     from:[from],
+                    pais,
                 
                 })
               
@@ -237,6 +238,17 @@ const usersControllers = {
         await user.save()
         res.json(console.log('sesion cerrada ' + email))
     },
+    verificarToken:(req, res) => {
+        console.log(req.user)
+        if(!req.err){
+        res.json({success:true,
+                  response:{id:req.user.id, fullName:req.user.fullName,email:req.user.email, from:"token"},
+                  message:"Bienvenido nuevamente "+req.user.fullName}) 
+        }else{
+            res.json({success:false,
+            message:"Por favor realiza nuevamente signIn"}) 
+        }
+    }
 
 }
 module.exports = usersControllers

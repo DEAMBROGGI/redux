@@ -11,7 +11,8 @@ function GoogleSignUp(props) {
       fullName: res.profileObj.givenName + " " + res.profileObj.familyName,
       email: res.profileObj.email,
       password: res.profileObj.googleId,
-      from: "google"
+      from: "google",
+      pais:props.pais
     }
     await props.signUpUser(userData)
   }
