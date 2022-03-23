@@ -1,9 +1,7 @@
 import React from "react";
-import SignUp from "./signup";
-import SignIn from "./signin";
 import { connect } from 'react-redux';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import userActions from '../../redux/actions/userActions';
+import './styleSign.css'
 
 
 function Container(props) {
@@ -14,26 +12,16 @@ function Container(props) {
 
 	return (
 		<>
-			{props.user ? <><h1>Usuario conectado {props.user.fullName} desde {props.user.from}</h1>
-				<div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-					<button onClick={SignOut} className="btn btn-primary btn-block" style={{ maxWidth: 400 }}> SignOut  </button>
-				</div>
-			</>
-				: <h1>No hay usuario conectado</h1>}
-			<div className="card bg-light">
-				
-					
-
-					<BrowserRouter>
-						<Routes>
-							{!props.user &&<Route path="/" element={<SignIn />} />}
-							{!props.user &&<Route path="/signup" element={<SignUp />} />}
-						</Routes>
-					</BrowserRouter>
-
-
-				
-			</div>
+			{props.user ?
+				<>
+					<div style={{ display: "flex",flexBasis:"row", justifyContent: "center", width: "100%" }}>
+						<h5 className="navBar-text"style={{ display: "flex",flexBasis:"row", justifyContent: "center", alignItems:"center", width: "100%" }}>{props.user.fullName}</h5>
+						<button onClick={SignOut} className="btnSignOut"><span style={{fontSize:30}}class="material-icons">
+power_off
+</span></button>
+					</div>
+				</>
+				: <h4 className="first">No hay usuario conectado</h4>}
 
 		</>
 	)

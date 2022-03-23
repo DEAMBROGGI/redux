@@ -4,8 +4,7 @@ import userActions from '../../redux/actions/userActions';
 import { Link as LinkRouter } from 'react-router-dom';
 import GoogleSignUp from './GoogleSignUp'
 import FacebookSignUp from './FacebookSignUp';
-import Select from 'react-select'
-import SelectPaises from './select'
+
 
 function SignUp(props) {
     const paises = ["unselected", "Argentina", "Brazil", "Colombia", "Chile", "Uruguay"]
@@ -88,7 +87,7 @@ function SignUp(props) {
                             <div className="form-group">
                                 <button type="submit" className="btn btn-primary btn-block"> Create Account  </button>
                             </div>
-                            <div className="text-center">Have an account? <LinkRouter to="/">SignIn</LinkRouter> </div>
+                            <div className="text-center">Have an account? <LinkRouter to="/signin">SignIn</LinkRouter> </div>
                         </form>
                     </> : <h1>Selecciona tu pais para continuar signUp</h1>}
             </article>

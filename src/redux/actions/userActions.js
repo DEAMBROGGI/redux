@@ -49,30 +49,42 @@ const userActions = {
     VerificarToken: (token) => {
 
         return async (dispatch, getState) => {
-            console.log(token)
-            const user = await axios.get('http://localhost:4000/api/auth/signInToken', {
+
+            await axios.get('http://localhost:4000/api/auth/signInToken', {
                 headers: {
                     'Authorization': 'Bearer ' + token
                 }
             })
-            console.log(user)
-            
-            if (user.data.success) {
-                dispatch({ type: 'user', payload: user.data.response });
-                dispatch({
-                    type: 'message',
-                    payload: {
-                        view: true,
-                        message: user.data.message,
-                        success: user.data.success
+                .then(user => {
+                    console.log(user)
+                    if (user.data.success) {
+                        dispatch({ type: 'user', payload: user.data.response });
+                        dispatch({
+                            type: 'message',
+                            payload: {
+                                view: true,
+                                message: user.data.message,
+                                success: user.data.success
+                            }
+                        });
+                    } else {
+                        localStorage.removeItem('token')
                     }
-                });
-            } else {
-                localStorage.removeItem('token')
-            }
-
+                }
+                ).catch(error => {
+                    console.log(error.response.status)
+                    if (error.response.status === 401)
+                        dispatch({
+                            type: 'message',
+                            payload: {
+                                view: true,
+                                message: "Por favor realize nuevamente su signIn",
+                                success: false
+                            }
+                        })
+                    localStorage.removeItem('token')
+                })
         }
     }
-
 }
 export default userActions;

@@ -1,5 +1,10 @@
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(32, 31, 31);
 }
 input{
   width: 30vw;
@@ -18,3 +23,4 @@ input{
   text-align: center;
   font-size: 20px;
 }
+

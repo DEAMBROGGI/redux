@@ -1,19 +1,19 @@
 
 const initialState = {
-    apiData: [],
-    filterApiData: [],
+    places: [],
+    filterPlaces: [],
     auxiliar: []
 }
 
-const dataReducer = (state = initialState, action) => {
+const placesReducer = (state = initialState, action) => {
     console.log(action)
     
     switch (action.type) {
-        case 'fetch':
+        case 'allplaces':
             return {
                 ...state,
-                apiData: action.payload,
-                filterApiData: action.payload,
+                places: action.payload,
+                filterPlaces: action.payload,
                 auxiliar: action.payload,
             }
 
@@ -28,4 +28,4 @@ const dataReducer = (state = initialState, action) => {
             return state
     }
 }
-export default dataReducer
+export default placesReducer

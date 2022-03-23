@@ -104,8 +104,8 @@ const usersControllers = {
             }
             } else {
                 //SI EL USUARIO NO ESXITE
-               
-                const contraseñaHasheada = bcryptjs.hashSync(password, 10) //LO CREA Y ENCRIPTA LA CONTRASEÑA
+               //LO CREA Y ENCRIPTA LA CONTRASEÑA
+                const contraseñaHasheada = bcryptjs.hashSync(password, 10) 
             
                 // CREA UN NUEVO OBJETO DE PERSONAS CON SU USUARIO Y CONTRASEÑA (YA ENCRIPTADA)
                 const nuevoUsuario = await new User({
@@ -120,7 +120,7 @@ const usersControllers = {
                 })
               
                 //SE LO ASIGNA AL USUARIO NUEVO
-                if (from !== "form-Signup") { //SI LA PETICION PROVIENE DE CUENTA GOOGLE
+                if (from !== "form-Signup") { //SI LA PETICION PROVIENE DE CUENTA EXTERNA
                     await nuevoUsuario.save()
                     res.json({
                         success: true, 
@@ -239,8 +239,9 @@ const usersControllers = {
         res.json(console.log('sesion cerrada ' + email))
     },
     verificarToken:(req, res) => {
-        console.log(req.user)
-        if(!req.err){
+       
+     
+        if(req.user){
         res.json({success:true,
                   response:{id:req.user.id, fullName:req.user.fullName,email:req.user.email, from:"token"},
                   message:"Bienvenido nuevamente "+req.user.fullName}) 
